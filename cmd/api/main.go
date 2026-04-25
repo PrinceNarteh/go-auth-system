@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"auth-system/internal/config"
+)
 
 func main() {
-	fmt.Println("Working")
+	config.LoadConfig()
 }
