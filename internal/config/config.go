@@ -16,8 +16,10 @@ type AppConfig struct {
 }
 
 type DBConfig struct {
-	URI  string
-	Name string
+	URI      string
+	Name     string
+	Username string
+	Password string
 }
 
 type JwtConfig struct {

@@ -1,9 +1,13 @@
 package main
 
 import (
-	"auth-system/internal/config"
+	"auth-system/internal/database"
 )
 
 func main() {
-	config.LoadConfig()
+	// connect to database
+	_, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
 }

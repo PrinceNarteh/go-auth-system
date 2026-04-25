@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var Env *Config
+var Env *Config = LoadConfig()
 
 func LoadConfig() *Config {
 	if err := godotenv.Load(); err != nil {
@@ -24,11 +24,13 @@ func LoadConfig() *Config {
 			RateLimit: getEnvInt("RATE_LIMIT", 5),
 		},
 		DB: DBConfig{
-			URI:  getEnv("MONGODB_URI", "mongodb://localhost:27017/auth_db"),
-			Name: getEnv("MONGODB_NAME", "auth_db"),
+			URI:      getEnv("MONGODB_URI", "mongodb://localhost:27017/auth_db"),
+			Name:     getEnv("MONGODB_NAME", "auth_db"),
+			Username: getEnv("MONGODB_USERNAME", "admin"),
+			Password: getEnv("MONGODB_PASSWORD", "secret_password"),
 		},
 		JWT: JwtConfig{
-			Secret:     getEnv("JWT_SECRET", "secret_password"),
+			Secret:     getEnv("JWT_SECRET", "wHRi8StvZJdGcPW9OmhpadcqLXQx5xFKQocoh+7rSIc"),
 			Expiration: getEnvDuration("JWT_EXIPIRATION", 10*time.Second),
 		},
 	}
