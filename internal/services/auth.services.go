@@ -18,6 +18,8 @@ var _ AuthService = (*authService)(nil)
 type AuthService interface {
 	Register(context.Context, *dtos.RegisterDTO) (*models.User, error)
 	Login(context.Context, *dtos.LoginDTO) (*models.LoginResponse, error)
+	ValidateToken(tokenStr string) (*models.User, error)
+	CreateAdminUser(ctx context.Context, email, password string) error
 }
 
 type authService struct {
@@ -114,11 +116,6 @@ func (s *authService) ValidateToken(tokenStr string) (*models.User, error) {
 	}
 
 	return user, nil
-}
-
-// GetUserByID retrieves a user by their ID
-func (s *authService) GetUserByID(ctx context.Context, id string) (*models.User, error) {
-	return s.repo.User.FindByID(ctx, id)
 }
 
 // CreateAdminUser creates an admin user if none exists
