@@ -94,3 +94,35 @@ func (m *AuthMiddleware) OptionalAuthMiddleware() fiber.Handler {
 		return c.Next()
 	}
 }
+
+// RefreshToken generates a new token from an old one
+// POST /api/auth/refresh
+func (m *AuthMiddleware) RefreshToken(c fiber.Ctx) error {
+	// Get token from Authorization header
+	authHeader := c.Get("authorization")
+	if authHeader == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Mission token",
+		})
+	}
+
+	parts := strings.Split(authHeader, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid token format",
+		})
+	}
+
+	// Refresh token
+	oldToken := parts[1]
+	newToken, err := utils.RefreshToken(oldToken)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Failed to refresh token: " + err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"token": newToken,
+	})
+}

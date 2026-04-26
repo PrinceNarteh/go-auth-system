@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"auth-system/internal/dtos"
+	"auth-system/internal/models"
 	"auth-system/internal/repository"
 	"auth-system/internal/services"
 
@@ -15,6 +16,7 @@ var _ AuthHandler = (*authHandler)(nil)
 type AuthHandler interface {
 	Login(fiber.Ctx) error
 	Register(fiber.Ctx) error
+	GetProfile(fiber.Ctx) error
 }
 
 type authHandler struct {
@@ -50,6 +52,8 @@ func (h *authHandler) Register(c fiber.Ctx) error {
 	})
 }
 
+// Login handles user login
+// POST /api/auth/login
 func (h *authHandler) Login(c fiber.Ctx) error {
 	loginDTO := new(dtos.LoginDTO)
 	if err := c.Bind().Body(loginDTO); err != nil {
@@ -68,5 +72,31 @@ func (h *authHandler) Login(c fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Login successful",
 		"data":    user,
+	})
+}
+
+// GetProfile returns the authenticated user's profile
+// GET /api/auth/profile
+func (h *authHandler) GetProfile(c fiber.Ctx) error {
+	// Get user from context (set by auth middleware)
+	userRaw := c.Locals("user")
+	if userRaw == nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "User not found in context",
+		})
+	}
+
+	user, ok := userRaw.(*models.User)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Invalid user data in context",
+		})
+	}
+
+	// Remove sensitive data
+	user.Password = ""
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"user": user,
 	})
 }
