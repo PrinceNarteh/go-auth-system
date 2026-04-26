@@ -19,6 +19,9 @@ var (
 
 type UserRepository interface {
 	Create(context.Context, *models.User) error
+	FindByEmail(context.Context, string) (*models.User, error)
+	FindByID(context.Context, string) (*models.User, error)
+	UpdateLastLogin(context.Context, string) error
 }
 
 type userRepository struct {
