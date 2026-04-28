@@ -29,7 +29,13 @@ func (h *authHandler) Register(c fiber.Ctx) error {
 	registerDTO := new(dtos.RegisterDTO)
 	if err := c.Bind().Body(registerDTO); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "invalid request body",
+			"error": err.Error(),
+		})
+	}
+
+	if err := registerDTO.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err,
 		})
 	}
 
@@ -59,6 +65,12 @@ func (h *authHandler) Login(c fiber.Ctx) error {
 	if err := c.Bind().Body(loginDTO); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "invalid request body",
+		})
+	}
+
+	if err := loginDTO.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err,
 		})
 	}
 

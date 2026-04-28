@@ -3,6 +3,7 @@ module auth-system
 go 1.26.2
 
 require (
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/gofiber/fiber/v3 v3.2.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/joho/godotenv v1.5.1
@@ -12,6 +13,8 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.2.1 // indirect
+	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
+	github.com/go-ozzo/ozzo-validation/v4 v4.3.0 // indirect
 	github.com/gofiber/schema v1.7.1 // indirect
 	github.com/gofiber/utils/v2 v2.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
